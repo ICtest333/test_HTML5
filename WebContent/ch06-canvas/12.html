@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>선형 그라디언트 (중간색자동생성)</title>
+<script type="text/javascript">
+	window.onload=function(){
+		var canvas = document.getElementById('canvas');//'canvas': body태그내 canvas태그 Id
+		if(canvas.getContext){
+			var ctx = canvas.getContext('2d');
+			
+			//선형 그라디언트 (중간색자동생성)
+			//createLinearGradient(x1,y1,x2,y2): 시작점(x1,y1), 끝점(x2,y2)을 지정하여 그라디언트 영역 만듬(객체화)
+			var grad = ctx.createLinearGradient(0,0,0,200); //세로방향
+			
+			//addColorStop(position,color) 메서드에서 'position'은 그라디언트에서 색상 위치를 상대적으로 표시함
+			//0.0~1.0, 0.0과 1.0위치에서의 색상만 지정해주면 두색상 사이의 중간색상은 자동계산해서 그라디언트를 만들어줌.
+			grad.addColorStop(0,'#39c'); //blue계열
+			grad.addColorStop(1,'orange');
+			
+			ctx.fillStyle = grad;
+			ctx.fillRect(0,0,200,200);
+			
+			//ctx.stroke(); //테두리칠때사용, strokeStyle ??							
+			
+		}else{
+			alert('브라우저가 캔버스를 지원하지 않습니다.');
+		}
+	};
+</script>
+</head>
+<body>
+	<!-- canvas 태그 : 그림을 그릴 수 있는 전용 태그-->
+	<canvas id="canvas" width="500" height="300"></canvas>	
+</body>
+</html>

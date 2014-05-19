@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>캔버스 연습5</title>
+<script type="text/javascript">
+	window.onload=function(){
+		var canvas = document.getElementById('canvas');//'canvas': body태그내 canvas태그 Id
+		if(canvas.getContext){
+			
+			var ctx = canvas.getContext('2d');
+			
+			//begin Path
+			ctx.beginPath();//생략가능
+			
+			ctx.moveTo(50,50);//시작점옮김 => 시작점
+			ctx.lineTo(80,80);//왼쪽작은직선 => 끝점
+			
+			ctx.moveTo(140,80); => 시작점
+			ctx.lineTo(170,50);//오른쪽작은직선 => 끝점
+			
+			ctx.moveTo(60,150); => 시작점
+			ctx.lineTo(170,150);//아래직선 => 끝점
+			
+			//closePath
+			ctx.closePath();//생략가능
+			
+			//경로에테두리표시, 명시하지않으면 선이그려지지않음
+			ctx.stroke(); // 꼭 !!
+			
+			
+		}else{
+			alert('브라우저가 캔버스를 지원하지 않습니다.');
+		}
+	};
+</script>
+</head>
+<body>
+	<!-- canvas 태그 : 그림을 그릴 수 있는 전용 태그-->
+	<canvas id="canvas" width="500" height="300"></canvas>	
+</body>
+</html>

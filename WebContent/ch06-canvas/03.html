@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>캔버스 연습3</title>
+<script type="text/javascript">
+	window.onload=function(){
+		var canvas = document.getElementById('canvas');
+		if(canvas.getContext){
+			
+			var ctx = canvas.getContext('2d');
+			ctx.fillStyle = 'rgb(200,0,0)';//색상지정(r,g,b)
+			ctx.fillRect(10,10,100,100);
+			
+			ctx.fillStyle = 'rgba(0,0,200,0.5)';//색상및알파값지정(0.0완전투명~1.0완전불투명)
+			ctx.fillRect(50,50,100,100);
+			
+		}else{
+			alert('브라우저가 캔버스를 지원하지 않습니다.');
+		}
+	};
+</script>
+</head>
+<body>
+	<!-- canvas 태그 : 그림을 그릴 수 있는 전용 태그-->
+	<canvas id="canvas" width="500" height="300"></canvas>	
+</body>
+</html>

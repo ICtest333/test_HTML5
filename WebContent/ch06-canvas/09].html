@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>캔버스 연습9</title>
+<script type="text/javascript">
+	window.onload=function(){
+		var canvas = document.getElementById('canvas');//'canvas': body태그내 canvas태그 Id
+		if(canvas.getContext){
+			var ctx = canvas.getContext('2d');
+			
+			//그림자효과
+			
+			//객체로부터 그림자가 x축방향으로 얼마나 떨어져있는가를 나타냄.
+			//기본값은 0이며, 음수이면 왼쪽에 그림자가 생김
+			ctx.shadowOffsetX = 10;
+			//ctx.shadowOffsetX = -10;
+			
+			//객체로부터 그림자가  y축방향으로 얼마나 떨어져있는가를 나타냄.
+			//기본값은 0이며, 음수이면 위쪽에 그림자가 생김
+			ctx.shadowOffsetY = 10;
+			//ctx.shadowOffsetY = -10;
+			
+			//그림자가 얼마나 흐릿한가를 나타냄. 기본값은 0
+			ctx.shadowBlur = 10;
+			
+			//그림자 색상을 지정 기본값은 완전히 투명한 검정색
+			ctx.shadowColor = '#CCCCCC';
+			
+			ctx.fillRect(10,10,100,100);
+			
+			ctx.stroke();
+			
+		}else{
+			alert('브라우저가 캔버스를 지원하지 않습니다.');
+		}
+	};
+</script>
+</head>
+<body>
+	<!-- canvas 태그 : 그림을 그릴 수 있는 전용 태그-->
+	<canvas id="canvas" width="500" height="300"></canvas>	
+</body>
+</html>

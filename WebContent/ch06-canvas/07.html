@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>캔버스 연습7</title>
+<script type="text/javascript">
+	window.onload=function(){
+		var canvas = document.getElementById('canvas');//'canvas': body태그내 canvas태그 Id
+		if(canvas.getContext){
+			var ctx = canvas.getContext('2d');
+			/* 
+			arc메서드에서의 각도는 도(degree)로 표기하지 않고 라디안(radian)값으로 표기함
+			1radian == 180/Math.PI,
+			60도 : (Math.PI/180)*60
+			360도: Math.PI*2
+			
+			x,y 위치에서 시작해서 반시계방향(anticlockwise)으로 반지름(r)만큼의 원을 그림
+			startAngle과 endAngle 매개변수는 호의 시작점과 끝점 의미
+			 */
+			 
+			//70,70에서 반시계방향으로 반지름 20px인 원을 그리는데, 60도까지만 그리고 테두리만 표시함
+			 
+			ctx.beginPath();
+			ctx.arc(70,70,20,0,(Math.PI/180)*60,true); //x, y, r(반지름), a1(시작각도:0) a2(끝각도:60), true:반시계방향 => 300도만큼표시됨
+			//ctx.arc(70,70,20,0,(Math.PI/180)*60,false); //x, y, r(반지름), a1(시작각도:0) a2(끝각도:60), false:시계방향 => 60도만큼표시됨
+			
+			//ctx.closePath(); //시작점과 끝점을 직선연결하는 역할, (열린 호 그릴려면 빼야)
+			
+			ctx.stroke();
+			 
+			//130,110에서 반시계방향으로 반지름 50인 원, 색을 채움, 끝각도: 360도,
+			ctx.beginPath();
+			ctx.arc(130,110,50,0,Math.PI*2,true);
+			//ctx.closePath(); //원이이어있어의미없음
+			ctx.fillStyle = 'rgb(0,200,200)'; //하늘색으로
+			ctx.fill(); //채움
+			ctx.stroke();//표시
+			
+			//190,70에서 반시계방향으로 반지름 20인 원, 110도에서 170도까지만 그림, 테두리를 표시
+			ctx.beginPath();
+			ctx.arc(190,70,20,(Math.PI/180)*110,(Math.PI/180)*170,true);
+			//ctx.closePath(); // (열린 호 그릴려면 빼야) => 미키마우스의 귀모양?
+			ctx.stroke();//표시
+			
+		}else{
+			alert('브라우저가 캔버스를 지원하지 않습니다.');
+		}
+	};
+</script>
+</head>
+<body>
+	<!-- canvas 태그 : 그림을 그릴 수 있는 전용 태그-->
+	<canvas id="canvas" width="500" height="300"></canvas>	
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>이미지파일로부터 이미지읽기</title>
+<script type="text/javascript">
+	window.onload=function(){
+		var canvas = document.getElementById('canvas');//'canvas': body태그내 canvas태그 Id
+		if(canvas.getContext){
+			var ctx = canvas.getContext('2d');
+			
+			//이미지파일로부터 이미지읽기
+			var img = new Image();
+			
+			//이미지를 전부 읽어들인 후 함수 호출
+			img.onload=function(){
+				//ctx.drawImage(img,10,100,200,100);//이미지객체,x,y,w,h=>크기조정
+				
+				//이미지중 특정위치의 이미지부분을 잘라내어 원하는 위치에 원하는 크기로 이미지를 보여줌
+				//drawImage(img,sx,sy,sWidth,sHeight,dx,dy,dWidth,dHeight);
+				//원래이미지에서 가로로 sx만큼, 세로로 sy만큼 떨어진 곳으로부터 넓이 sWidth, 높이 sHeight 크기로 이미지를 잘라냄.
+				//그리고, (dx,dy) 위치에 넓이 dWidth, 높이 dHeight 만큼 이미지를 그림
+				ctx.drawImage(img,100,50,150,200,30,30,100,150);
+				
+			};
+			
+			img.src = 'landscape.jpg';
+			
+		}else{
+			alert('브라우저가 캔버스를 지원하지 않습니다.');
+		}
+	};
+</script>
+</head>
+<body>
+	<!-- canvas 태그 : 그림을 그릴 수 있는 전용 태그-->
+	<canvas id="canvas" width="500" height="300"></canvas>	
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>캔버스 연습10</title>
+<script type="text/javascript">
+	window.onload=function(){
+		var canvas = document.getElementById('canvas');//'canvas': body태그내 canvas태그 Id
+		if(canvas.getContext){
+			var ctx = canvas.getContext('2d');
+			//배지에 곡선
+			//초점이 한개인 경우
+			ctx.beginPath();
+			//시작점(50,200)으로 옮김
+			ctx.moveTo(50,200);
+			//(200,50)을 조절점으로 하여 현재 위치 (50,200)에서 끝 위치(350,200)까지 곡선을 그림
+			ctx.quadraticCurveTo(200,50,350,200);
+			ctx.stroke();       //조절점, 끝점
+			
+		}else{
+			alert('브라우저가 캔버스를 지원하지 않습니다.');
+		}
+	};
+</script>
+</head>
+<body>
+	<!-- canvas 태그 : 그림을 그릴 수 있는 전용 태그-->
+	<canvas id="canvas" width="500" height="300"></canvas>	
+	<br><br>
+	<img src="exp_01.gif">
+
+</body>
+</html>

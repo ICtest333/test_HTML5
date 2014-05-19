@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>캔버스 연습6</title>
+<script type="text/javascript">
+	window.onload=function(){
+		var canvas = document.getElementById('canvas');//'canvas': body태그내 canvas태그 Id
+		if(canvas.getContext){
+			
+			var ctx = canvas.getContext('2d');
+			
+			//색칠된 삼각형(직각)
+			ctx.beginPath();
+			
+			ctx.moveTo(50,50);//1
+			ctx.lineTo(150,50);//2
+			ctx.lineTo(50,150);//3
+			
+			ctx.closePath();
+			
+			ctx.fill();
+			
+			//빨간색테두리의 삼각형
+			ctx.beginPath();
+
+			ctx.moveTo(80,80);//1
+			ctx.lineTo(200,100);//2
+			ctx.lineTo(100,200);//3
+			
+			ctx.closePath(); //삼각형완성되도록 closing하는역할
+			
+			ctx.strokeStyle = 'rgb(200,0,0)';
+			ctx.stroke(); //삼각형완성후디스플레이
+			
+		}else{
+			alert('브라우저가 캔버스를 지원하지 않습니다.');
+		}
+	};
+</script>
+</head>
+<body>
+	<!-- canvas 태그 : 그림을 그릴 수 있는 전용 태그-->
+	<canvas id="canvas" width="500" height="300"></canvas>	
+</body>
+</html>
