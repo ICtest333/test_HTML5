@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>세션 스토리지(Session Storage)</title>
+<script type="text/javascript">
+/* 
+세션 스토리지 : 브라우저가 열려있는 동안 데이터를 저장하고 사용할 수 있음. 브라우저가 닫히면 저장된 데이터는 사라짐.
+ */
+ 	window.onload=function(){
+		load();
+	};
+	function save(){
+		var first = document.getElementById('first');
+		var first_value = first.value;
+		
+		//세션스토리지에 저장
+		sessionStorage.setItem('name',first_value);
+		
+		load();
+	}
+	function load(){
+		 var display = document.getElementById('display');
+		 
+		 //세션스토리지에 저장된 데이터 읽기
+		 var name = sessionStorage.getItem('name');
+		 
+		 if(name)
+			 display.innerHTML = '저장된 값 : ' + name;
+		 
+	}
+ 
+</script>
+</head>
+<body>
+<h2>세션 스토리지(Session Storage)</h2>
+<input type="text" name="first" id="first">
+<button onclick="save()">저장</button>
+<div id="display">비어있음</div>
+</body>
+</html>

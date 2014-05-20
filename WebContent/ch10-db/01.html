@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DB연습</title>
+<style type="text/css">
+	fieldset{
+		width:216px;
+	}
+	fieldset ul{
+		list-style:none;
+		padding:0;
+		margin:2px;
+	}
+	fieldset ul li{
+		margin:0 0 9px 0;
+		pading:0;
+	}
+	p{
+		width:100%;
+		text-align:center;
+	}
+	input[type="submit"]{
+		width:80px;
+		font-family:"맑은 고딕";
+	}
+</style>
+<script type="text/javascript">
+/* 
+DB 사용 순서
+1. 데이터베이스 오픈
+2. 트랜잭션 시작
+3. SQL 실행
+ */
+ 	var db;
+ 	window.onload=function(){
+ 		if(!window.openDatabase){
+ 			alert('openDatabase를 지원하지 않습니다.');
+ 			return;
+ 		}
+ 		                  // db명,  버전,   설명,       용량(bytes)
+ 		db = openDatabase('dbtest','1.0','product database',1024*1024);
+ 		                  
+ 		//테이블생성
+ 		db.transaction(function(tx){
+ 			tx.executeSql('create table if not exists goods(code integer primary key autoincrement,name,quantity integer,price integer)');
+ 		});																						//text는 type명기안함
+ 		
+ 		load();
+ 		
+ 		//이벤트처리 (form 태그 id로 접근하므로, <form id="myForm"> 와 같이 HTML내 form id=이하 확인, name=이 아님.ㅠㅠ)
+ 		document.getElementById('myForm').onsubmit=function(){
+ 			add();
+ 			return false;//기본이벤트제거(반복적리로드 예방)
+ 		}; 		
+ 	};
+ 
+		//데이터저장
+		function add(){
+			//상품명,수량,단가를 읽어옴
+			var name = document.getElementById('name');
+			var quantity = document.getElementById('quantity');
+			var price = document.getElementById('price');
+			
+			//데이터등록
+			db.transaction(function(tx){
+				tx.executeSql('insert into goods (name,quantity,price) values (?,?,?)',   /* ?처리 */
+								[name.value,quantity.value,price.value], 				/* 배열형식으로 입력 */
+								function(tx,rs){										/* 성공시 호출함수 */
+									//input 태그에 값 초기화
+									name.value='';
+									quantity.value='';
+									price.value='';
+									
+									load();
+								}, function(error){										/* 실패시 호출함수 */
+									alert('등록에러!');
+								});
+			});
+		}
+		//데이터읽기
+		function load(){
+			var tbody = document.getElementById('tbody');
+			tbody.innerHTML = ''; //초기화(데이터누적방지)
+			
+			db.transaction(function(tx){
+				tx.executeSql('select code,name,quantity,price from goods order by code desc',
+						[],
+						function(tx,rs){
+							var rows = rs.rows; //테이블의 모든 레코드를 읽은 후 치환
+							
+							var new_row='';
+							
+							//rows.length : 행의 갯수
+							//rows.item(인덱스): 행의 데이터 읽기
+							for(var i=0;i<row.length;i++){
+								var row = rows.item(i);
+								new_row += '<tr><td>'+row.code+'</td><td>'+ row.name + '</td><td>' + row.quantity + '</td><td>' + row.price + '</td></tr>';
+							}
+							tbody.innerHTML = new_row;
+						},
+						function(error){});
+		}
+		
+</script>
+
+</head>
+<body>
+<form id="myForm">
+	<fieldset>
+		<legend>자료 추가</legend>
+		<ul>
+			<li>
+				<label for="name">상품명</label>
+				<input type="text" id="name" required>
+			</li>
+			<li>
+				<label for="quantity">수량</label>
+				<input type="number" id="quantity" min="0" max="1000" required>
+			</li>
+			<li>
+				<label for="price">가격</label>
+				<input type="number" id="price" min="0" max="10000000" required>
+			</li>
+			<li>
+				<p><input type="submit" value="추가"></p>
+		</ul>
+	</fieldset>	
+</form>
+<br>
+<h3>상품 목록</h3>
+<table>
+	<tr>
+		<th>코드</th><th>상품명</th><th>수량</th><th>단가</th>
+	</tr>
+	<tbody id="tbody"></tbody>	
+</table>
+</body>
+</html>
