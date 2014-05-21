@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>내장 DB : CRUD : 로컬App에 활용가능</title>
+<style type="text/css">
+	fieldset{
+		width:216px;
+	}
+	fieldset ul{
+		list-style:none;
+		padding:0;
+		margin:2px;
+	}
+	fieldset ul li{
+		margin:0 0 9px 0;
+		pading:0;
+	}
+	p{
+		width:100%;
+		text-align:center;
+	}
+	input[type="submit"]{
+		width:80px;
+		font-family:"맑은 고딕";
+	}
+	select{
+		width:200px;
+	}
+	button{
+		width:48%;
+	}
+</style>
+<script type="text/javascript">
+	var db;
+	window.onload=function(){
+		//
+		if(!window.openDatabase){
+			alert('openDatabase를 지원하지 않습니다.');
+			return;
+		}
+						//DB명,  버전,  설명,        용량
+		db = openDatabase('dbemp','1.0','dbemp database',1024*1024);
+		
+		//테이블생성
+		//db.transaction(callback,errorCallback,successCallback);//첫인자외 둘째/세째인자 생략가능
+		db.transaction(function(tx){
+			tx.executeSql('create table if not exists emp(emp_id integer primary key autoincrement,emp_name,emp_age integer)');
+		});
+		
+		//초기데이터읽기
+		load();
+		
+		//이벤트처리
+		document.getElementById('myForm').onsubmit=function(){ // onsubmit~b!!
+			if(document.getElementById('btnAdd').value=='저장'){
+				add();
+			}else{
+				modify();
+			}
+			return false;//기본이벤트제거!! (화면리로드방지)
+		};
+		document.getElementById('btnRemove').onclick=function(){
+			remove();
+			
+			return false;
+		};
+		document.getElementById('btnModify').onclick=function(){
+			modify_form();
+			
+			return false;
+		};
+	};
+	
+	//데이터읽기
+	function load(){
+		db.transaction(function(tx){
+			//tx.executeSql('',[],function(){},function(){}); // executeSql !!
+			tx.executeSql('select emp_id,emp_name,emp_age from emp order by emp_id desc',
+							[],
+							function(tx,rs){
+								var list = document.getElementById('list');
+								//초기화
+								list.innerHTML = '';
+								
+								var rows = rs.rows; //select문 실행 결과
+								
+								for(var i=0;i<rows.length;i++){
+									var row = rows.item(i);//한건의 레코드 읽기
+									
+									//Option 객체 생성    //데이터(문자열),                           value
+									var str = new Option(row.emp_id+','+row.emp_name+','+row.emp_age, row.emp_id); //(데이터,value)
+									
+									list.options[list.options.length] = str; // options !!
+									
+								}
+								
+							},
+							function(){
+								alert('읽기에러발생!')
+							});
+		});
+	}
+	//데이터등록
+	function add(){
+		var name = document.getElementById('name');
+		var age = document.getElementById('age');
+		
+		db.transaction(function(tx){
+			//tx.executeSql('',[],function(){},function(){}); // executeSql !!
+			tx.executeSql('insert into emp (emp_name,emp_age) values (?,?)',
+						[name.value,age.value],
+						function(tx,rs){
+							alert('사번[' + rs.insertId + ']번의 레코드 추가 성공');
+							
+							name.value = '';
+							age.value = '';
+							
+							load();
+						},
+						function(error){
+							alert('등록 에러!');
+						});
+		});
+	}
+	//데이터삭제
+	function remove(){
+		var list = document.getElementById('list');
+		if(list.selectedIndex < 0){//삭제할 항목이 없는 경우
+			return;
+		}
+		
+		var select_data = list.options[list.selectedIndex].value;
+		
+		db.transaction(function(tx){
+			//tx.executeSql('',[],function(){},function(){}); // executeSql !!
+			tx.executeSql('delete from emp where emp_id = ?',
+						  [select_data],
+						  function(tx,rs){
+							alert('정상적으로 삭제되었습니다.');
+							load();
+						  },
+						  function(error){
+							alert('삭제에러발생!');
+						  });
+		});
+		
+	}
+	//데이터수정폼
+	function modify_form(){
+		var list = document.getElementById('list');
+		
+		//수정할 항목이 없는 경우
+		if(list.selectedIndex < 0){
+			return;
+		}
+		
+		var select_data = list.options[list.selectedIndex].value;
+		
+		db.transaction(function(tx){
+			//tx.executeSql('',[],function(){},function(){}); // executeSql !!
+			tx.executeSql('select emp_id,emp_name,emp_age from emp where emp_id=?',
+					       [select_data],
+					       function(tx,rs){
+								
+								var rows = rs.rows;
+								
+								if(rows){
+									var row = rows.item(0);//한건의 레코드 읽기
+									
+									document.getElementById('id').value = row.emp_id;
+									document.getElementById('name').value = row.emp_name;
+									document.getElementById('age').value = row.emp_age;
+									
+									document.getElementById('btnAdd').value = '수정';
+								}
+				
+							},
+					       function(error){
+					    	   alert('수정폼 읽기에러 발생!');
+					       });			
+		});
+	}
+	//데이터수정
+	function modify(){
+		var id = document.getElementById('id');
+		var name = document.getElementById('name');
+		var age = document.getElementById('age');
+		
+		db.transaction(function(tx){
+			tx.executeSql('update emp set emp_name=?,emp_age=? where emp_id=?',
+						  [name.value,age.value,id.value],
+						  function(tx,rs){
+							  alert('사번['+id.value+']번의 레코드 수정 성공!');
+							  
+							  id.value='';
+							  name.value='';
+							  age.value='';
+							  
+							  document.getElementById('btnAdd').value = '저장';
+							  
+							  load();
+					 	   },
+						  function(error){
+							  alert('수정에러!');
+						  });
+		});
+		
+	}
+</script>
+</head>
+<body>
+<form id="myForm">
+<input type="hidden" id="id" name="name">
+<fieldset>
+	<legend>직원 자료 관리</legend>
+	<ul>
+		<li>
+			<label for="name">이름</label>
+			<input type="text" id="name" name="name" required>
+		</li>
+		<li>
+			<label for="age">나이</label>
+			<input type="number" id="age" name="age" required>
+		</li>
+		<li>
+			<p><input type="submit" id="btnAdd" value="저장"></p>
+		</li>
+		<li>
+			<select id="list" size="5"></select>
+		</li>
+		<li>
+			<button id="btnModify">선택항목 수정</button>
+			<button id="btnRemove">선택항목 삭제</button>
+		</li>
+	</ul>
+</fieldset>
+</form>
+</body>
+</html>

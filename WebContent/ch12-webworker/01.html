@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Web Worker</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+	//Worker객체생성		//(백그라운드 실행코드가 있는 js파일명)
+	var worker = new Worker('worker1.js');
+	
+	$(function(){
+		$('#btnOk').click(function(){
+			//백그라운드작업수행하는 객체에 데이터전달
+			worker.postMessage($('#guguNum').val());
+		});
+		
+		//백그라운드에서 데이터작업완료후 postMessage메서드에 데이터를 전달하면 이벤트가 발생함
+		worker.onmessage = function(event){
+			$('#result').html(event.data);//백그라운드실행 결과값반환
+		};
+		
+		worker.onerror = function(event){
+			$('#result').html('에러발생!');
+		}
+		
+		$('btnStop').click(function(){
+			if(worker)
+				worker.terminate();
+		});
+	});
+	
+</script>
+</head>
+<body>
+<!-- 웹워커 : 자바스크립트 코드를 백그라운드에서 실행시키는 기술 -->
+<input type="text" id="guguNum">
+<input type="button" id="btnOk" value="확인">
+<input type="button" id="btnStop" value="중지">
+<br>
+<div id="result"></div>
+</body>
+</html>

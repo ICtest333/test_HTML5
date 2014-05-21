@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Drag and Drop</title>
+<style type="text/css">
+	div#r{
+		border:2px solid #f00;
+		float:left;
+	}
+	div#g{
+		border:2px solid #0f0;
+		float:left;
+	}
+	div#b{
+		border:2px solid #00f;
+		float:left;
+	}
+	div#y{
+		border:2px solid #ff0;
+		float:left;
+	}
+	div{
+		width:110px;
+		height:110px;
+	}
+</style>
+<script type="text/javascript">
+/* 
+태그를 드래그할 경우는 태그의 속성 draggable="true"로 명시
+img, a 요소는 기본적으로 드래그 가능, draggable="true" 생략가능
+
+이벤트
+dragstart : 사용자가 요소를 드래그하고자 할 때 dragstart 이벤트가 발생함.
+			dragstart 이벤트 발생하면 드래그와 관련된 정보설정
+drag : 마우스가 움직일때 발생하며 드래그되는 요소가 이벤트 대상
+dragend : 성공적이든 실패했든 드래그가 끝났을때 발생
+
+dragenter: 드래그되는 요소가 드롭할 요소의 경계안에 들어왔을때 발생
+dragover : 드래그되는 요소가 드롭할 요소의 경계안에 있을때 계속발생
+dragleave: 드래그되는 요소가 드롭할 요소의 경계로부터 나왔을때 발생
+
+drop :  드래그되는 요소가 성공적으로 드롭대상 영역 위에 드롭되었을때 발생
+ */
+ 
+ 	function drag(target,e){
+		//드래그 이미지를 event 객체안에 dataTransfer에 key-value형식으로 등록
+		e.dataTransfer.setData('good',target.id);
+	}
+	function drop(target,e){
+		//drag 대상 id를 얻기
+		var id = e.dataTransfer.getData('good');
+		target.appendChild(document.getElementById(id));//자식으로편입시킴
+	}
+ 
+</script>
+</head>
+<body>
+<div id="r" ondrop="drop(this,event)" ondragover="return false"></div>
+<div id="g" ondrop="drop(this,event)" ondragover="return false"></div>
+<div id="b" ondrop="drop(this,event)" ondragover="return false"></div>
+<div id="y" ondrop="drop(this,event)" ondragover="return false"></div>
+<img src="bb.png" id="img1" width="100" height="100" ondragstart="drag(this,event)">
+<img src="cc.png" id="img2" width="100" height="100" ondragstart="drag(this,event)">
+</body>
+</html>
